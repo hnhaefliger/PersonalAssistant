@@ -1,0 +1,28 @@
+{
+who is [1]
+whois([1])
+}
+{
+what time is it,what is the time,what is the hour
+timeis()
+}
+{
+what is the date
+dateis()
+}
+{
+tell me about [1],tell me more about [1],what is [1]
+whatis([1])
+}
+{
+what is the weather like in [1],what is the weather in [1]
+weather([1], None)
+}
+{
+what is the weather like, what is the weather
+weather(None, None)
+}
+{
+what is the weather going to be like on [2] in [1], what is the weather going to be like in [1] on [2], what is the weather in [1] like on [2], what is the weather like in [1] on [2], what will the weather be like on [2] in [1]
+weather([1], [2])
+}
