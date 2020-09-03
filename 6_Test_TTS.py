@@ -7,7 +7,7 @@ if __name__ == '__main__':
     model = Model(loadfrom='TTS/Models/model1.h5')
     model.segmentModel()
 
-    speaker = Output.speaker()
+    speaker = Output.Speaker()
 
     phones = []
 

@@ -106,7 +106,7 @@ class Model:
 
         y = np.array([Utils.phonesToArray('\t')])
 
-        while not(Utils.checkPhonemesEnd(y[0][-1])):
+        while not(Utils.checkPhonesEnd(y[0][-1])):
             decoding, state_h, state_c = self.decoder.predict([np.array([y[:, -1]]), state_h, state_c])
 
             pred = self.output.predict([decoding, encoding])
