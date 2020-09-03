@@ -1,10 +1,10 @@
 import STT.Model, TTS.Model, TTS.Synthesis
 from Audio import Input, Output
-from Data import STT.Utils, TTS.Utils
+import Data.STT.Utils, Data.TTS.Utils
 from Command import Commands
 from Command import Functions
 
-if __name__ = '__main__':
+if __name__ == '__main__':
     listenerModel = STT.Model.Model(loadfrom='STT/Models/model1.h5')
     listenerModel.segmentModel()
 
@@ -12,33 +12,40 @@ if __name__ = '__main__':
 
     handler = Commands.Handler('Command/Commands.txt')
 
-    synthesisModel = TTS.Model.Model(loadfrom='TTS/Model/model1.h5')
+    synthesisModel = TTS.Model.Model(loadfrom='TTS/Models/model1.h5')
     synthesisModel.segmentModel()
 
     speaker = Output.Speaker()
 
     while True:
-        data = listener.listen()
+        print('recording')
         
-        data = STT.Utils.createSpectrogram(data)
+        data = listener.listen()
 
-        data = STT.Utils.padSpectrogram(data, len(data) + 8 - len(data) % 8)
+        print('done')
+        
+        data = Data.STT.Utils.createSpectrogram(data)
+
+        data = Data.STT.Utils.padSpectrogram(data, len(data) + 8 - len(data) % 8)
 
         data = listenerModel.predict(data)
 
-        data = STT.Utils.arrayToString(data)
+        data = Data.STT.Utils.arrayToString(data)
+
+        print(data)
 
         data = handler.match(data)
 
-        data = eval('Function.' + data)
+        if data:
+            data = eval('Functions.' + data)
 
-        phones = []
+            phones = []
 
-        for word in data.split(' '):
-            data = TTS.Utils.stringToArray(word)
+            for word in data.split(' '):
+                data = Data.TTS.Utils.stringToArray(word)
 
-            phones += TTS.Utils.arrayToPhones(synthesisModel.predict(data)).split(' ') + [' ']
+                phones += Data.TTS.Utils.arrayToPhones(synthesisModel.predict(data)).split(' ') + [' ']
 
-        TTS.Synthesis.synthesize(phones, 'Dataset/TTS/male', 'Data/TTS')
-        
-        speaker.say(TTS.Synthesis.getAudio('Data/TTS/output.wav'))
+            TTS.Synthesis.synthesize(phones, 'Dataset/TTS/male', 'Data/TTS')
+            
+            speaker.say(TTS.Synthesis.getAudio('Data/TTS/output.wav'))
