@@ -5,7 +5,7 @@ if __name__ == '__main__':
 
     history = trainer.train(5).history
 
-    trainer.save('STT/Models/model2.h5')
+    trainer.saveModel('STT/Models/model2.h5')
     
     with open('STT/Models/model2history.txt', 'w+') as f:
         f.write(history)
