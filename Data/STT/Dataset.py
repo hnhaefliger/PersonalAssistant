@@ -1,3 +1,9 @@
+import os, logging
+
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
+logging.getLogger("tensorflow").setLevel(logging.CRITICAL)
+logging.getLogger("tensorflow_hub").setLevel(logging.CRITICAL)
+
 from tensorflow.keras.utils import Sequence
 import numpy as np
 from Data.STT import Utils
