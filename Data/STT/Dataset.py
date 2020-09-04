@@ -3,10 +3,13 @@ import numpy as np
 from Data.STT import Utils
 
 class Dataset(Sequence):
-    def __init__(self, location, batch_size=8, interval=[0,-1]):
+    def __init__(self, location, model, batch_size=8, interval=[0,-1], teacher_forcing=lambda x: not(x % 5)):
         '''
         Initialize dataset by fetching sentence/recording pairs
         '''
+
+        self.model = model
+        self.teacher_forcing = teacher_forcing
         
         self.location = location
         self.batch_size = batch_size
@@ -47,6 +50,11 @@ class Dataset(Sequence):
         x2_padding = max(x2_length)
 
         x2 = np.array([Utils.stringToArray(sentence, padding=x2_padding) for sentence in x2])
+
+        if self.teacher_forcing(idx):
+            x2 = np.array(self.model.model.predict((x1, x2)))
+            x2 = np.concatenate((np.array([Utils.stringToArray('\t') for i in range(self.batch_size)]), x2), axis=1)
+            
         y = np.array([Utils.stringToArray(sentence, padding=x2_padding) for sentence in y])
 
         return (x1, x2), y        
