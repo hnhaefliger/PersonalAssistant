@@ -4,6 +4,18 @@ import Data.STT.Utils, Data.TTS.Utils
 from Command import Commands
 from Command import Functions
 
+'''
+import re
+
+regex = re.compile('[^a-zA-Z ]')
+    
+with open('Dataset/TTS/dictionary.txt', 'r') as f:
+    matches = f.read().split('\n')[:-1]
+    matches = [line.split('  ') for line in matches]
+    matches = [[line[0], regex.sub('', line[1]).split(' ')] for line in matches if len(line) == 2]
+    matches = {line[0]: line[1] for line in matches}
+'''
+
 if __name__ == '__main__':
     listenerModel = STT.Model.Model(loadfrom='STT/Models/model1.h5')
     listenerModel.segmentModel()
@@ -39,12 +51,19 @@ if __name__ == '__main__':
         if data:
             data = eval('Functions.' + data)
 
+            print(data)
+
             phones = []
 
             for word in data.split(' '):
                 data = Data.TTS.Utils.stringToArray(word)
 
                 phones += Data.TTS.Utils.arrayToPhones(synthesisModel.predict(data)).split(' ') + [' ']
+            
+            '''
+            for word in data.upper().split(' '):
+                phones += matches[word] + [' ']
+            '''
 
             TTS.Synthesis.synthesize(phones, 'Dataset/TTS/male', 'Data/TTS')
             
